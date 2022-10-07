@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Land Registry System</title>
+</head>
+
+<body>
+    <button id="btn" type="button" onclick="myFunction()">Call API</button>
+    <button id="btn" type="button" onclick="getConnections()">get connection  API</button>
+
+    
+
+
+</body>
+
+
+
+<script>
+    function myFunction() {
+        let request = new XMLHttpRequest();
+        request.open("POST", "http://localhost:8021/connections/create-invitation")
+        request.send();
+        request.onload = () => {
+            console.log(request);
+            if (request.status == 200) {
+                let invitationJson = JSON.parse(request.response);
+               
+                window.localStorage.setItem('invitation_object', JSON.stringify(invitationJson.invitation));
+                console.log(window.localStorage.getItem('invitation_object'));
+            } else {
+                console.log(`error ${request.status} ${request.statusText}`);
+            }
+        };
+    }
+
+    function getConnections(){
+        let request = new XMLHttpRequest();
+        request.open("GET", "http://localhost:8021/connections")
+        request.send();
+        request.onload = () => {
+            console.log(request);
+            if (request.status == 200) {
+                // let invitationJson = JSON.parse(request.response);
+                // console.log(invitationJson);
+                console.log(JSON.parse(request.response));
+            } else {
+                console.log(`error ${request.status} ${request.statusText}`);
+            }
+        };
+    }
+</script>
+
+</html>
