@@ -146,6 +146,12 @@
             if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
                 // Request finished. Do processing here.
                 console.log(request.response);
+               
+                let pres = JSON.parse(request.response);
+        let pres_ex_id = JSON.stringify(pres.pres_ex_id);
+        var pres_id = pres_ex_id.replaceAll('"', '');
+        console.log("pres ex id",pres_id);
+                getStatus(pres_id);
                 // let connection_id_alice = JSON.parse(request.response);
                 // window.localStorage.setItem('connection_id_alice', JSON.stringify(connection_id_alice.connection_id.trim()));
                 // console.log(window.localStorage.getItem('connection_id_alice'));
@@ -153,6 +159,23 @@
             }
         }
         request.send(JSON.stringify(proofReq));
+    }
+
+    function getStatus(pres_id) {
+        let request = new XMLHttpRequest();
+        request.open("GET", `http://localhost:8021/present-proof-2.0/records/${pres_id}`)
+        request.send();
+        request.onload = () => {
+            console.log(request);
+            if (request.status == 200) {
+                // let invitationJson = JSON.parse(request.response);
+                // console.log(invitationJson);
+                
+                console.log(JSON.parse(request.response));
+                let connections = JSON.parse(request.response);
+                
+            }
+        }
     }
 </script>
 
