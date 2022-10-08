@@ -9,7 +9,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
+<body onload="loadText()">
   <div class="container mx-auto mt-10">
     <div class="overflow-hidden bg-white shadow sm:rounded-lg">
       <div class="px-4 py-5 sm:px-6 ">
@@ -20,17 +20,17 @@
         <dl>
           <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 ">
             <dt class="text-sm font-medium  text-gray-500 text-2xl">Full name : </dt>
-            <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0  text-2xl"></dd>
+            <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0  text-2xl" id="Fname"></dd>
           </div>
           <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-            <dt class="text-sm font-medium text-gray-500  text-2xl">Pin Code : </dt>
-            <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0 text-2xl"></dd>
+            <dt class="text-sm font-medium text-gray-500  text-2xl">Date of Birth : </dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0 text-2xl" id="dob"></dd>
           </div>
           <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-            <dt class="text-sm font-medium text-gray-500 text-2xl">Address : </dt>
-            <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0 text-2xl"></dd>
+            <dt class="text-sm font-medium text-gray-500 text-2xl">Proof of Residence : </dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0 text-2xl" id="residence"></dd>
           </div>
-          <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <!-- <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt class="text-sm font-medium text-gray-500 text-2xl">Land Mark : </dt>
             <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0 text-2xl"></dd>
           </div>
@@ -41,7 +41,7 @@
           <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt class="text-sm font-medium text-gray-500 text-2xl">Area In sq Feet : </dt>
             <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0 text-2xl"></dd>
-          </div>
+          </div> -->
       </div>
     </div>
     <button class="bg-blue-500 mt-10  hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
@@ -50,5 +50,13 @@
 
 
 </body>
+
+<script>
+  const loadText = () => {
+    let FName = document.getElementById("Fname").innerHTML = window.localStorage.getItem("FName");
+    let dob = document.getElementById("dob").innerHTML = window.localStorage.getItem("dob");
+    let residence = document.getElementById("residence").innerHTML = window.localStorage.getItem("residence");
+  }
+</script>
 
 </html>

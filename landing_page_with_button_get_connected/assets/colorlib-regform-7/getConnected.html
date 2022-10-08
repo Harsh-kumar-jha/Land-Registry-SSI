@@ -46,7 +46,7 @@
                                     terms and Conditions.</label>
                             </div>
                             <div class="form-group form-button">
-                                <input type="file" id="myFile" name="filename"><br>
+                                <br>
                                 <a class="btn btn-primary" href="../registraton-form/RegistrationForm.html">Get
                                     Connected</a>
 
@@ -138,6 +138,8 @@
             if (request.status == 200) {
                 // let invitationJson = JSON.parse(request.response);
                 // console.log(invitationJson);
+                receive_invitation();
+                getWallet();
                 console.log(JSON.parse(request.response));
                 let connections = JSON.parse(request.response);
                 let connectionARR = JSON.stringify(connections.results[0].connection_id);
@@ -240,7 +242,6 @@ function issue_credential(){
 }
 request.send(JSON.stringify(issuer_cred));
 }
-        
           </script>
 
 </body>
