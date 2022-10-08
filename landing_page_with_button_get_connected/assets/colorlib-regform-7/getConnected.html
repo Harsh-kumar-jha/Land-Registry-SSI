@@ -17,6 +17,9 @@
 </head>
 
 <body>
+    <button id="btn" type="button" onclick="getWallet()">get wallet</button>
+    <button id="btn" type="button" onclick="getConnections()">get </button>
+
 
     <div class="main">
 
@@ -43,7 +46,7 @@
                                     terms and Conditions.</label>
                             </div>
                             <div class="form-group form-button">
-                                <input type="file" id="myFile" name="filename"><br>
+                                <br>
                                 <a class="btn btn-primary" href="../registraton-form/RegistrationForm.html">Get
                                     Connected</a>
 
@@ -60,6 +63,187 @@
     <!-- JS -->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="js/main.js"></script>
+    <script>
+
+
+        function getWallet() {
+            let request = new XMLHttpRequest();
+                request.open("GET", 'http://localhost:8021/wallet/did/public')
+                request.send();
+                request.onload = () => {
+                    console.log(request);
+                    if (request.status == 200) {
+                        cred_def_created();
+                         schemas_created();
+                         issue_credential();
+                        console.log(request.response);
+                        let wallet = JSON.parse(request.response);
+                        let inv = JSON.stringify(wallet.result.did.split('"').join(''));
+                        let did = inv.replaceAll('"','')
+                        window.localStorage.setItem('did_faber', did);
+                        console.log("DID",window.localStorage.getItem('did_faber'));
+                    } else {
+                        console.log(`error ${request.status} ${request.statusText}`);
+                    }
+                };
+        }
+
+        function cred_def_created(){
+            let request = new XMLHttpRequest();
+                request.open("GET", 'http://localhost:8021/credential-definitions/created')
+                request.send();
+                request.onload = () => {
+                    console.log(request);
+                    if (request.status == 200) {
+                        console.log(request.response);
+                        let cred_def_id = JSON.parse(request.response);
+                        // let inv = JSON.stringify(cred_def_id.credential_definition_ids);
+                      let idn =  JSON.stringify(cred_def_id.credential_definition_ids[0]);
+                      let id = idn.replaceAll('"','')
+                        window.localStorage.setItem('cred_def_id', id);
+                        console.log("cred_def_id",window.localStorage.getItem('cred_def_id'));
+                      
+                    } else {
+                        console.log(`error ${request.status} ${request.statusText}`);
+                    }
+                };
+        }
+        function schemas_created(){
+            let request = new XMLHttpRequest();
+                request.open("GET", 'http://localhost:8021/schemas/created')
+                request.send();
+                request.onload = () => {
+                    console.log(request);
+                    if (request.status == 200) {
+                        console.log(request.response);
+                        let schemas = JSON.parse(request.response);
+                        // let inv = JSON.stringify(cred_def_id.credential_definition_ids);
+                      let idn =  JSON.stringify(schemas.schema_ids[0]);
+                      let id = idn.replaceAll('"','')
+                        window.localStorage.setItem('schema_id', id);
+                        
+                        console.log("schema id",window.localStorage.getItem('schema_id'));
+                      
+                    } else {
+                        console.log(`error ${request.status} ${request.statusText}`);
+                    }
+                };
+        }
+        function getConnections(){
+        let request = new XMLHttpRequest();
+        request.open("GET", "http://localhost:8021/connections")
+        request.send();
+        request.onload = () => {
+            console.log(request);
+            if (request.status == 200) {
+                // let invitationJson = JSON.parse(request.response);
+                // console.log(invitationJson);
+                receive_invitation();
+                getWallet();
+                console.log(JSON.parse(request.response));
+                let connections = JSON.parse(request.response);
+                let connectionARR = JSON.stringify(connections.results[0].connection_id);
+                console.log("connection id",connectionARR);
+                let connectionID = connectionARR.replaceAll('"','')
+                window.localStorage.setItem('connection_id',connectionID);
+                console.log(window.localStorage.getItem('connection_id'));
+            } else {
+                console.log(`error ${request.status} ${request.statusText}`);
+            }
+        };
+    }
+  
+   
+    function receive_invitation(){
+        let request = new XMLHttpRequest();
+        request.open("POST", "http://localhost:8031/connections/receive-invitation",true)
+        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        request.onreadystatechange = () => { // Call a function when the state changes.
+  if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
+    // Request finished. Do processing here.
+    let connection_id_alice = JSON.parse(request.response);
+    window.localStorage.setItem('connection_id_alice', JSON.stringify(connection_id_alice.connection_id.trim()));
+    console.log(window.localStorage.getItem('connection_id_alice'));
+    console.log(connection_id_alice.connection_id);
+  }
+}
+request.send(window.localStorage.getItem("invitation_object"));
+       
+    }
+var issuer_cred = {
+    
+        "auto_remove": true,
+        "comment": "hello mf",
+        "connection_id": window.localStorage.getItem('connection_id'),
+        "credential_preview": {
+            "@type": "issue-credential/2.0/credential-preview",
+            "attributes": [
+                {"name": "name", "value": "Alice Smith"},
+                {"name": "timestamp", "value": "1234567890"},
+                {"name": "date", "value": "2018-05-28"},
+                {"name": "degree", "value": "Maths"},
+                {"name": "birthdate_dateint", "value": "19640101"}
+            ]
+        },
+        "filter": {
+            "indy": {
+            "cred_def_id": window.localStorage.getItem('cred_def_id'),
+            "issuer_did": window.localStorage.getItem('did_faber'),
+            "schema_id": window.localStorage.getItem('schema_id'),
+            "schema_issuer_did": window.localStorage.getItem('did_faber'),
+            "schema_name": window.localStorage.getItem('schema_id').split(":")[2],
+            "schema_version": window.localStorage.getItem('schema_id').split(":")[3]
+            }
+        },
+        "trace": false
+    
+    }    
+    window.localStorage.setItem("issuer_cred",issuer_cred);
+        // "auto_remove": true,
+        // "comment": "issuing credential to user",
+        // "connection_id": window.localStorage.getItem('connection_id'),
+        // "credential_preview": {
+        //     "@type": "issue-credential/2.0/credential-preview",
+        //     "attributes": [
+        //         {"name": "name", "value": "Alice Smith"},
+        //         {"name": "timestamp", "value": "1234567890"},
+        //         {"name": "date", "value": "2018-05-28"},
+        //         {"name": "degree", "value": "Maths"},
+        //         {"name": "birthdate_dateint", "value": "19640101"}
+        //     ]
+        // },
+        // "filter": {
+        //         "indy": {
+        //         "cred_def_id": window.localStorage.getItem('cred_def_id'),
+        //         "issuer_did": window.localStorage.getItem('did_faber'),
+        //         "schema_id": window.localStorage.getItem('schema_id'),
+        //         "schema_issuer_did": window.localStorage.getItem('did_faber'),
+        //         "schema_name": window.localStorage.getItem('schema_id').split(":")[2],
+        //         "schema_version": window.localStorage.getItem('schema_id').split(":")[3],
+        //     }   
+        // },
+        // "trace": false
+    
+
+function issue_credential(){
+    console.log(issuer_cred.comment);
+    let request = new XMLHttpRequest();
+        request.open("POST", "http://localhost:8021/issue-credential-2.0/send")
+        request.setRequestHeader("Content-Type", "application/json");
+        request.onreadystatechange = () => { // Call a function when the state changes.
+  if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
+    // Request finished. Do processing here.
+    console.log(request.response);
+    // let connection_id_alice = JSON.parse(request.response);
+    // window.localStorage.setItem('connection_id_alice', JSON.stringify(connection_id_alice.connection_id.trim()));
+    // console.log(window.localStorage.getItem('connection_id_alice'));
+    // console.log(connection_id_alice.connection_id);
+  }
+}
+request.send(JSON.stringify(issuer_cred));
+}
+          </script>
+
 </body>
 
 </html>
