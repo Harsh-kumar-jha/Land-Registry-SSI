@@ -32,7 +32,7 @@
         <div class="row align-items-center justify-content-center">
           <div class="col-md-7 py-5">
             <h3>Register</h3>
-            <p class="mb-4">Lorem ipsum dolor sit amet elit. Sapiente sit aut eos consectetur adipisicing.</p>
+            <!-- <p class="mb-4">Lorem ipsum dolor sit amet elit. Sapiente sit aut eos consectetur adipisicing.</p> -->
             <form action="#" method="post">
               <div class="form-group">
                 <label for="your_name"><i class="zmdi zmdi-account material-icons-name"></i></label>
@@ -270,12 +270,27 @@
       "credential_preview": {
         "@type": "issue-credential/2.0/credential-preview",
         "attributes": [
-          { "name": "name", "value": `${window.localStorage.getItem("FName")}` },
-          { "name": "timestamp", "value": `${(new Date().toJSON().slice(0, 10)).toString()}` },
-          { "name": "date", "value": "2018-05-28" },
-          { "name": "degree", "value": "Maths" },
-          { "name": "birthdate_dateint", "value": `${window.localStorage.getItem("dob").replaceAll('-', '')}` }
-        ]
+        {
+        "name": "name",
+        "value": "Alice Smith"
+      },
+      {
+        "name": "timestamp",
+        "value": "1234567890"
+      },
+      {
+        "name": "date",
+        "value": "2018-05-28"
+      },
+      {
+        "name": "degree",
+        "value": "Maths"
+      },
+      {
+        "name": "birthdate_dateint",
+        "value": "20060101"
+      },
+    ],
       },
       "filter": {
         "indy": {
@@ -298,7 +313,7 @@
       if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
         // Request finished. Do processing here.
         console.log(request.response);
-        // location.replace("http://127.0.0.1:5501/landing_page_with_button_get_connected/assets/profileShow/dashboad.html")
+        location.replace("http://127.0.0.1:5501/landing_page_with_button_get_connected/assets/profileShow/dashboad.html")
 
       }
     }

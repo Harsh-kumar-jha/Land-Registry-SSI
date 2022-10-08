@@ -152,6 +152,16 @@
         var pres_id = pres_ex_id.replaceAll('"', '');
         console.log("pres ex id",pres_id);
                 getStatus(pres_id);
+                let age = window.localStorage.getItem("dob");
+                console.log(age.split("-")[0]);
+                if(parseInt(new Date().getFullYear()) - (parseInt(age.split("-")[0])) >= 18) {
+                    location.replace("http://127.0.0.1:5501/verified%20page/")
+                } else {
+                    location.replace("http://127.0.0.1:5501/error-not-verified/")
+                }
+                // if((parseInt(age.split("-")[2]) - (new Date().getFullYear()) >= 18) {
+                    
+                // }
                 // let connection_id_alice = JSON.parse(request.response);
                 // window.localStorage.setItem('connection_id_alice', JSON.stringify(connection_id_alice.connection_id.trim()));
                 // console.log(window.localStorage.getItem('connection_id_alice'));
@@ -173,7 +183,7 @@
                 
                 console.log(JSON.parse(request.response));
                 let connections = JSON.parse(request.response);
-                
+                 
             }
         }
     }
